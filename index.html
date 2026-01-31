@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AMAZØN LUXE™ — Démo Parodie</title>
+  <style>
+    :root{
+      --bg1:#2b2100; --bg2:#000;
+      --gold:#ffd700; --gold2:#b8860b;
+      --text:#f5d76e; --muted:rgba(245,215,110,.75);
+      --panel:rgba(0,0,0,.35);
+      --line:rgba(255,215,0,.15);
+      --white:rgba(255,255,255,.9);
+      --danger:#ff3b3b;
+      --ok:#5dff8a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at top, var(--bg1), var(--bg2));
+      color:var(--text);
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    header{
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      color:#000;
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      position:sticky;
+      top:0;
+      z-index:10;
+      box-shadow:0 6px 20px rgba(0,0,0,.35);
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:1000;
+      letter-spacing:.4px;
+    }
+    .badge{
+      font-size:12px;
+      background:#000;
+      color:var(--gold);
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,215,0,.35);
+      white-space:nowrap;
+    }
+    .right{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;
+    }
+    .pill{
+      background:#000;
+      color:var(--gold);
+      padding:6px 10px;
+      border-radius:10px;
+      font-size:13px;
+      border:1px solid rgba(255,215,0,.35);
+      white-space:nowrap;
+      font-weight:900;
+    }
+    .tiny{font-size:12px;opacity:.88;white-space:nowrap}
+    .wrap{
+      display:grid;
+      grid-template-columns: 310px 1fr;
+      gap:12px;
+      padding:12px;
+      flex:1;
+      min-height:0;
+    }
+    @media (max-width: 980px){
+      .wrap{grid-template-columns:1fr}
+      .sidebar{order:2}
+    }
+    .sidebar,.main{
+      background: var(--panel);
+      border:1px solid var(--line);
+      border-radius:16px;
+      min-height:0;
+      overflow:hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(6px);
+    }
+    .sidebar{display:flex;flex-direction:column}
+    .side-top{padding:12px;border-bottom:1px solid rgba(255,215,0,.12)}
+    .disclaimer{
+      font-size:12px;
+      color:rgba(0,0,0,.85);
+      background:rgba(255,215,0,.90);
+      padding:10px;
+      border-radius:12px;
+      line-height:1.25;
+      font-weight:900;
+    }
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chip{
+      border:1px solid rgba(255,215,0,.25);
+      background: rgba(0,0,0,.45);
+      color: var(--text);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      cursor:pointer;
+      user-select:none;
+      font-weight:900;
+    }
+    .chip.active{border-color:rgba(255,215,0,.55);background: rgba(255,215,0,.16)}
+    .box{
+      margin-top:10px;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid rgba(255,215,0,.18);
+      background: rgba(0,0,0,.35);
+    }
+    .box b{color:var(--gold)}
+    .box input[type="range"]{width:100%; margin-top:8px}
+    .menu{padding:12px;display:flex;flex-direction:column;gap:10px}
+    .btn{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,215,0,.25);
+      background:rgba(0,0,0,.55);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:1000;
+      transition:.15s transform, .15s opacity;
+      text-align:left;
+    }
+    .btn:hover{transform:translateY(-1px); opacity:.95}
+    .btn.gold{
+      background: linear-gradient(90deg, rgba(255,215,0,.25), rgba(184,134,11,.18));
+      border:1px solid rgba(255,215,0,.45);
+    }
+    .btn.danger{
+      background: rgba(255,59,59,.12);
+      border:1px solid rgba(255,59,59,.35);
+      color:#ffd7d7;
+    }
+    .note{padding:0 12px 12px 12px;color:var(--muted);font-size:12px;line-height:1.3}
+
+    .main{display:flex;flex-direction:column;min-height:0}
+    .topbar{
+      padding:12px;
+      border-bottom:1px solid rgba(255,215,0,.12);
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    }
+    .search{
+      flex:1;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid rgba(255,215,0,.2);
+      background: rgba(0,0,0,.55);
+      color:var(--text);
+      outline:none;
+      font-weight:900;
+      min-width:220px;
+    }
+    .select{
+      padding:12px;
+      border-radius:12px;
+      border:1px solid rgba(255,215,0,.2);
+      background: rgba(0,0,0,.55);
+      color:var(--text);
+      outline:none;
+      font-weight:900;
+    }
+
+    .content{
+      flex:1;
+      overflow:auto;
+      padding:12px;
+      min-height:0;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+    }
+    @media (max-width: 1100px){ .grid{grid-template-columns: repeat(2, minmax(0, 1fr));} }
+    @media (max-width: 640px){ .grid{grid-template-columns: 1fr;} }
+
+    .card{
+      border:1px solid rgba(255,215,0,.15);
+      background: rgba(0,0,0,.35);
+      border-radius:16px;
+      padding:12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .img{
+      height:120px;
+      border-radius:14px;
+      border:1px solid rgba(255,215,0,.12);
+      background: linear-gradient(135deg, rgba(255,215,0,.12), rgba(184,134,11,.06));
+      display:flex;align-items:center;justify-content:center;
+      font-size:44px;
+      user-select:none;
+    }
+    .title{font-weight:1000;color:var(--white)}
+    .desc{font-size:12px;color:var(--muted);line-height:1.25}
+    .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .priceTag{
+      font-weight:1000;
+      padding:6px 10px;
+      border:1px solid rgba(255,215,0,.25);
+      border-radius:999px;
+      background: rgba(0,0,0,.45);
+    }
+    .stock{font-size:12px;color:rgba(255,255,255,.7)}
+    .add{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,215,0,.4);
+      background: linear-gradient(90deg, rgba(255,215,0,.25), rgba(184,134,11,.18));
+      color:var(--text);
+      cursor:pointer;
+      font-weight:1000;
+    }
+
+    /* Cart drawer */
+    .drawer{
+      position:fixed;
+      top:0; right:0;
+      height:100%;
+      width:min(420px, 92vw);
+      background: rgba(10,10,10,.96);
+      border-left:1px solid rgba(255,215,0,.25);
+      box-shadow:-20px 0 60px rgba(0,0,0,.6);
+      transform:translateX(105%);
+      transition:.2s transform;
+      z-index:1001;
+      display:flex;
+      flex-direction:column;
+    }
+    .drawer.on{transform:translateX(0)}
+    .drawerHead{
+      padding:14px;
+      border-bottom:1px solid rgba(255,215,0,.12);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .drawerHead b{color:var(--gold)}
+    .drawerBody{padding:14px; overflow:auto; flex:1}
+    .item{
+      border:1px solid rgba(255,215,0,.12);
+      background: rgba(255,255,255,.04);
+      border-radius:14px;
+      padding:10px;
+      margin-bottom:10px;
+      display:flex;flex-direction:column;gap:8px;
+    }
+    .itemTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .qty{
+      display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+    }
+    .qbtn{
+      padding:6px 10px;border-radius:10px;
+      border:1px solid rgba(255,215,0,.25);
+      background: rgba(0,0,0,.45);
+      color:var(--text);
+      font-weight:1000; cursor:pointer;
+    }
+    .remove{
+      border:1px solid rgba(255,59,59,.35);
+      background: rgba(255,59,59,.10);
+      color:#ffd7d7;
+      padding:6px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:1000;
+    }
+    .drawerFoot{
+      padding:14px;
+      border-top:1px solid rgba(255,215,0,.12);
+      display:flex;flex-direction:column;gap:10px;
+    }
+    .totalLine{
+      display:flex;justify-content:space-between;align-items:center;
+      font-weight:1000;
+    }
+    .checkout{
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,215,0,.4);
+      background: linear-gradient(90deg, rgba(255,215,0,.35), rgba(184,134,11,.25));
+      color:var(--text);
+      cursor:pointer;
+      font-weight:1000;
+    }
+    .closeBtn{
+      padding:10px 12px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:#fff;cursor:pointer;font-weight:1000;
+    }
+
+    /* Overlay loader */
+    .overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.75);
+      display:none;
+      align-items:center; justify-content:center;
+      z-index:1002;
+    }
+    .overlay.on{display:flex}
+    .loaderCard{
+      width:min(520px, 92vw);
+      background: rgba(10,10,10,.95);
+      border:1px solid rgba(255,215,0,.25);
+      border-radius:18px;
+      padding:16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.6);
+    }
+    .loaderCard h3{margin:0 0 8px 0}
+    .bar{
+      height:10px;
+      background: rgba(255,215,0,.12);
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid rgba(255,215,0,.18);
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(255,215,0,.55), rgba(184,134,11,.45));
+      animation: load 1.2s infinite ease-in-out;
+    }
+    @keyframes load{
+      0%{width:0%}
+      50%{width:85%}
+      100%{width:0%}
+    }
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center; justify-content:center;
+      z-index:1003;
+      background: rgba(0,0,0,.75);
+    }
+    .modal.on{display:flex}
+    .modal .loaderCard{
+      width:min(560px, 94vw);
+    }
+    .field{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+    .field label{font-size:12px;color:var(--muted);font-weight:900}
+    .field input{
+      padding:12px;border-radius:12px;
+      border:1px solid rgba(255,215,0,.2);
+      background: rgba(0,0,0,.55);
+      color:var(--text);
+      font-weight:900;
+      outline:none;
+    }
+    .warn{
+      margin-top:10px;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid rgba(255,59,59,.35);
+      background: rgba(255,59,59,.10);
+      color:#ffd7d7;
+      font-size:12px;
+      line-height:1.25;
+      font-weight:1000;
+    }
+    .ok{
+      padding:10px 12px;border-radius:12px;
+      border:1px solid rgba(255,215,0,.4);
+      background: rgba(255,215,0,.18);
+      color:var(--text);cursor:pointer;font-weight:1000;
+    }
+    .success{
+      border:1px solid rgba(93,255,138,.35);
+      background: rgba(93,255,138,.10);
+      color: rgba(220,255,230,.95);
+      font-size:12px; font-weight:1000;
+      padding:10px;border-radius:12px;margin-top:10px;
+      line-height:1.25;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="brand">🛒 AMAZØN LUXE™ <span class="badge">PARODIE / DÉMO</span></div>
+  <div class="right">
+    <div class="pill">Prime Luxe : 79,99€ / mois</div>
+    <div class="tiny">Essai gratuit (démo) : <b id="trialLeft">3</b> jours</div>
+    <div class="pill">Or Absolu ✨</div>
+    <button class="pill" style="cursor:pointer" onclick="toggleCart()">Panier 🧺 <b id="cartCount">0</b></button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="sidebar">
+    <div class="side-top">
+      <div class="disclaimer">
+        ⚠️ Ceci est une <u>parodie</u> / démo. <br>
+        Aucun paiement réel. Aucun produit réel. <br>
+        Juste du commerce imaginaire doré.
+      </div>
+
+      <div class="chips">
+        <div class="chip active" id="modeRude" onclick="toggleMode('rude')">Mode Insolent 😈</div>
+        <div class="chip" id="modePNJ" onclick="toggleMode('pnj')">Mode PNJ 🧍‍♂️</div>
+        <div class="chip" id="modeSoft" onclick="toggleMode('soft')">Mode Faux-Poli 🤝</div>
+      </div>
+
+      <div class="box">
+        Niveau de luxe : <b id="luxLevel">5</b>/10<br>
+        <input id="lux" type="range" min="1" max="10" value="5" oninput="setLux(this.value)">
+        <div class="tiny" style="padding:0;margin-top:8px">
+          Plus c’est haut, plus le site te bloque “parce que c’est premium”. 😴
+        </div>
+      </div>
+    </div>
+
+    <div class="menu">
+      <button class="btn gold" onclick="openPrime()">💳 Passer en ULTRA PRIME LUXE 149,99€</button>
+      <button class="btn" onclick="showPrimeGate()">🔒 Débloquer Livraison “En or”</button>
+      <button class="btn" onclick="fakeUpdate()">🪙 Télécharger la Mise à Jour Or</button>
+      <button class="btn" onclick="downloadReceipt()">🧾 Télécharger un reçu (FAKE)</button>
+      <button class="btn" onclick="resetAll()">🧼 Reset (panier + historique)</button>
+      <button class="btn danger" onclick="panic()">🚨 Mode Panique</button>
+    </div>
+
+    <div class="note">
+      💾 Tout est stocké <b>localement</b> (navigateur).<br>
+      🧠 Pas de serveur, pas de paiement, pas de collecte. (C’est une démo parodie.)
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <input id="q" class="search" placeholder="Cherche un produit premium inutile…" oninput="render()" />
+      <select id="cat" class="select" onchange="render()">
+        <option value="all">Toutes catégories</option>
+        <option value="bling">Bling</option>
+        <option value="flemme">Flemme</option>
+        <option value="pnj">PNJ</option>
+        <option value="food">Food de riche</option>
+      </select>
+      <select id="sort" class="select" onchange="render()">
+        <option value="hot">Tri : tendance</option>
+        <option value="low">Prix : croissant</option>
+        <option value="high">Prix : décroissant</option>
+      </select>
+      <button class="btn" style="width:auto" onclick="render()">🔄</button>
+    </div>
+
+    <div class="content">
+      <div class="grid" id="grid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Cart Drawer -->
+<div class="drawer" id="drawer">
+  <div class="drawerHead">
+    <div><b>Panier Luxe</b> <span style="opacity:.8;font-size:12px">(parodie)</span></div>
+    <button class="closeBtn" onclick="toggleCart(false)">Fermer</button>
+  </div>
+  <div class="drawerBody" id="cartBody"></div>
+  <div class="drawerFoot">
+    <div class="totalLine">
+      <span>Total</span>
+      <span id="total">0,00€</span>
+    </div>
+    <button class="checkout" onclick="openCheckout()">Passer au paiement (FAKE)</button>
+    <div class="tiny" style="padding:0">⚠️ Paiement factice. Juste pour rire.</div>
+  </div>
+</div>
+
+<!-- Loader -->
+<div class="overlay" id="overlay">
+  <div class="loaderCard">
+    <h3>✨ Traitement Premium…</h3>
+    <div class="bar"><i></i></div>
+    <div class="sub" id="loaderText">Polissage de l’or virtuel…</div>
+  </div>
+</div>
+
+<!-- Prime Modal -->
+<div class="modal" id="primeModal">
+  <div class="loaderCard">
+    <h3>💎 ULTRA PRIME LUXE — 149,99€</h3>
+    <div class="sub">Plus cher = plus inutile. C’est la tradition.</div>
+
+    <div class="field">
+      <label>Nom (pour faire sérieux)</label>
+      <input placeholder="Comte de la CB" />
+    </div>
+    <div class="field">
+      <label>Carte (FAKE)</label>
+      <input placeholder="0000 0000 0000 0000" />
+    </div>
+
+    <div class="warn">
+      ✅ Aucun paiement réel. Aucun enregistrement. <br>
+      C’est une parodie / démo.
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap">
+      <button class="closeBtn" onclick="closePrime()">Fermer</button>
+      <button class="ok" onclick="confirmPrime()">Payer (FAKE)</button>
+    </div>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="modal" id="checkoutModal">
+  <div class="loaderCard">
+    <h3>🧾 Checkout Luxe (FAKE)</h3>
+    <div class="sub">On va faire semblant, mais avec du style.</div>
+
+    <div class="field">
+      <label>Adresse (imaginaire)</label>
+      <input placeholder="Château Premium, Avenue de l'Or, 75000 Blingville" />
+    </div>
+    <div class="field">
+      <label>Livraison</label>
+      <input placeholder="Teleportation dorée (non incluse)" />
+    </div>
+
+    <div class="success" id="checkoutInfo" style="display:none"></div>
+
+    <div class="warn">
+      ✅ Aucun paiement réel. Aucun produit réel. <br>
+      C’est une démo parodie.
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap">
+      <button class="closeBtn" onclick="closeCheckout()">Annuler</button>
+      <button class="ok" onclick="confirmCheckout()">Payer (FAKE)</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ======= Data & storage =======
+  const STORE_KEY = "amazon_luxe_demo_store_v1";
+  const TRIAL_KEY = "luxe_trial_days_left_demo";
+  const LAST_KEY  = "luxe_trial_last_seen_demo";
+
+  let state = loadState() || { cart:{}, mode:"rude", lux:5, prime:false };
+
+  const products = [
+    {id:"p1",  icon:"💎", name:"Air de Luxe en Bocal", cat:"bling",  price:79.99, hype:98, desc:"Respire l’opulence. C’est littéralement de l’air. Premium."},
+    {id:"p2",  icon:"🧈", name:"Beurre Invisible Edition Or", cat:"food",  price:49.99, hype:92, desc:"0 calorie, 0 beurre, 100% imagination. (Ne pas tartiner.)"},
+    {id:"p3",  icon:"🧎", name:"Abonnement à la Flemme Pro", cat:"flemme", price:99.99, hype:90, desc:"Un coach te dit ‘pas aujourd’hui’ 3 fois par jour."},
+    {id:"p4",  icon:"🧍‍♂️", name:"PNJ Premium (pack de 3)", cat:"pnj",   price:29.99, hype:85, desc:"Ils te saluent et vendent rien. Ça s’appelle le service."},
+    {id:"p5",  icon:"🪙", name:"Pièce en Or Virtuelle (inutile)", cat:"bling", price:19.99, hype:80, desc:"Tu la possèdes. Elle ne sert à rien. Donc elle est rare."},
+    {id:"p6",  icon:"🫖", name:"Thé ‘Ego’ Infusé", cat:"food",  price:39.99, hype:87, desc:"Goût : jugement. Arrière-goût : supériorité."},
+    {id:"p7",  icon:"🧼", name:"Savon à l’Argent (pour être pauvre propre)", cat:"bling", price:59.99, hype:84, desc:"Le savon brille. Toi, tu pleures un peu."},
+    {id:"p8",  icon:"🛌", name:"Oreiller ‘Je Réponds Demain’", cat:"flemme", price:69.99, hype:89, desc:"Tu dors. Le monde attend. C’est ça le luxe."},
+    {id:"p9",  icon:"📦", name:"Carton de Livraison Vide", cat:"pnj", price:24.99, hype:83, desc:"Le frisson du colis… sans le contenu. Minimalisme doré."},
+    {id:"p10", icon:"🍟", name:"Frites de Riche (1 frite)", cat:"food", price:14.99, hype:79, desc:"Une seule frite. Mais elle est prestigieuse."},
+    {id:"p11", icon:"🫠", name:"Service Client Fantôme", cat:"pnj", price:9.99, hype:77, desc:"Tu écris. Personne répond. Expérience authentique."},
+    {id:"p12", icon:"🚫", name:"Bouton ‘Non’ Doré", cat:"flemme", price:44.99, hype:91, desc:"Tu appuies, ça dit non. C’est tout. Et c’est magnifique."}
+  ];
+
+  // ======= Voice (mode) =======
+  function speak(){
+    const pools = {
+      rude: [
+        "Trouduc.", "Ta gueule stp, c’est premium ici.",
+        "J’ai la flemme. Mais prends ton panier.",
+        "C’est trop pauvre comme question.",
+        "Je juge en 4K."
+      ],
+      pnj: [
+        "Bonjour client. Je suis PNJ. Je ne sers à rien.",
+        "Quête ajoutée : acheter un truc inutile.",
+        "Vous avez cliqué. Félicitations.",
+        "Je vends du vide. Merci."
+      ],
+      soft: [
+        "Avec plaisir 😌 (non).",
+        "Merci. Je vais ignorer avec élégance.",
+        "C’est très intéressant… pour quelqu’un d’autre."
+      ]
+    };
+    const a = pools[state.mode] || pools.rude;
+    let t = a[Math.floor(Math.random()*a.length)];
+    if(state.lux >= 8 && Math.random()<0.6) t = "Bloqué : trop premium pour toi 😴";
+    return t;
+  }
+
+  // ======= UI helpers =======
+  const grid = document.getElementById("grid");
+  const drawer = document.getElementById("drawer");
+  const cartBody = document.getElementById("cartBody");
+  const cartCount = document.getElementById("cartCount");
+  const totalEl = document.getElementById("total");
+  const overlay = document.getElementById("overlay");
+  const loaderText = document.getElementById("loaderText");
+  const trialLeftEl = document.getElementById("trialLeft");
+  const primeModal = document.getElementById("primeModal");
+  const checkoutModal = document.getElementById("checkoutModal");
+  const checkoutInfo = document.getElementById("checkoutInfo");
+
+  const loaderLines = [
+    "Polissage de l’or virtuel…",
+    "Compression du service client…",
+    "Optimisation de l’inutilité…",
+    "Téléportation du panier…",
+    "Calibration du snobisme…"
+  ];
+
+  function showLoader(){
+    overlay.classList.add("on");
+    loaderText.textContent = loaderLines[Math.floor(Math.random()*loaderLines.length)];
+  }
+  function hideLoader(){ overlay.classList.remove("on"); }
+
+  function money(n){
+    return n.toFixed(2).replace(".", ",") + "€";
+  }
+
+  function setMode(m){
+    state.mode = m;
+    document.getElementById("modeRude").classList.toggle("active", m==="rude");
+    document.getElementById("modePNJ").classList.toggle("active", m==="pnj");
+    document.getElementById("modeSoft").classList.toggle("active", m==="soft");
+    saveState();
+  }
+  function toggleMode(m){ setMode(m); toast("Mode", "Mode changé : " + m.toUpperCase()); }
+
+  function setLux(v){
+    state.lux = parseInt(v,10);
+    document.getElementById("luxLevel").textContent = state.lux;
+    saveState();
+    toast("Luxe", "Luxe réglé sur " + state.lux + "/10. Plus haut = plus nul 😴");
+  }
+
+  // ======= Trial (demo) =======
+  function initTrial(){
+    const now = Date.now();
+    let days = parseInt(localStorage.getItem(TRIAL_KEY) || "3", 10);
+    const last = parseInt(localStorage.getItem(LAST_KEY) || "0", 10);
+
+    if(last){
+      const lastDate = new Date(last);
+      const nowDate = new Date(now);
+      if(lastDate.toDateString() !== nowDate.toDateString()){
+        days = Math.max(0, days - 1);
+      }
+    }
+    localStorage.setItem(TRIAL_KEY, String(days));
+    localStorage.setItem(LAST_KEY, String(now));
+    trialLeftEl.textContent = String(days);
+  }
+  function trialDays(){ return parseInt(localStorage.getItem(TRIAL_KEY) || "3", 10); }
+
+  // ======= Cart =======
+  function addToCart(id){
+    // silly gate
+    if(state.lux >= 9 && Math.random()<0.35){
+      toast("Bloqué", "Ajout refusé : trop premium 🤌");
+      return;
+    }
+    state.cart[id] = (state.cart[id] || 0) + 1;
+    saveState();
+    updateCartUI();
+    toast("Panier", speak());
+  }
+
+  function removeFromCart(id){
+    delete state.cart[id];
+    saveState();
+    updateCartUI();
+  }
+
+  function changeQty(id, delta){
+    const q = (state.cart[id] || 0) + delta;
+    if(q <= 0) delete state.cart[id];
+    else state.cart[id] = q;
+    saveState();
+    updateCartUI();
+  }
+
+  function cartItems(){
+    return Object.entries(state.cart).map(([id, qty])=>{
+      const p = products.find(x=>x.id===id);
+      return {p, qty};
+    }).filter(x=>x.p);
+  }
+
+  function cartTotal(){
+    return cartItems().reduce((sum, it)=> sum + it.p.price * it.qty, 0);
+  }
+
+  function updateCartUI(){
+    const items = cartItems();
+    cartCount.textContent = items.reduce((s,it)=>s+it.qty,0);
+
+    if(items.length===0){
+      cartBody.innerHTML = `<div style="color:rgba(255,255,255,.7);font-weight:900">
+        Ton panier est vide. Comme le service client. 😭
+      </div>`;
+      totalEl.textContent = money(0);
+      return;
+    }
+
+    cartBody.innerHTML = items.map(({p, qty})=>`
+      <div class="item">
+        <div class="itemTop">
+          <div>
+            <div style="font-weight:1000;color:rgba(255,255,255,.92)">${p.icon} ${p.name}</div>
+            <div style="font-size:12px;color:${getMuted()}">${p.cat.toUpperCase()} • ${money(p.price)}</div>
+          </div>
+          <button class="remove" onclick="removeFromCart('${p.id}')">Retirer</button>
+        </div>
+        <div class="qty">
+          <button class="qbtn" onclick="changeQty('${p.id}',-1)">-</button>
+          <b>${qty}</b>
+          <button class="qbtn" onclick="changeQty('${p.id}',1)">+</button>
+          <span style="margin-left:auto;font-weight:1000">${money(p.price*qty)}</span>
+        </div>
+      </div>
+    `).join("");
+
+    totalEl.textContent = money(cartTotal());
+  }
+
+  function getMuted(){ return "rgba(245,215,110,.75)"; }
+
+  function toggleCart(force){
+    const on = typeof force==="boolean" ? force : !drawer.classList.contains("on");
+    drawer.classList.toggle("on", on);
+  }
+
+  // ======= Render products =======
+  function render(){
+    const query = (document.getElementById("q").value || "").toLowerCase();
+    const cat = document.getElementById("cat").value;
+    const sort = document.getElementById("sort").value;
+
+    let list = products.filter(p=>{
+      const okQ = !query || (p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
+      const okC = (cat==="all") || (p.cat===cat);
+      return okQ && okC;
+    });
+
+    if(sort==="low") list.sort((a,b)=>a.price-b.price);
+    else if(sort==="high") list.sort((a,b)=>b.price-a.price);
+    else list.sort((a,b)=>b.hype-a.hype);
+
+    grid.innerHTML = list.map(p=>{
+      const left = Math.max(1, Math.floor((100 - p.hype)/6)) + (state.lux>=7 ? 0 : 1); // fake scarcity
+      const ship = state.prime ? "Livraison: Téléportation (FAKE)" : "Livraison: Or lent (démo)";
+      return `
+        <div class="card">
+          <div class="img">${p.icon}</div>
+          <div class="title">${p.name}</div>
+          <div class="desc">${p.desc}</div>
+          <div class="row">
+            <div class="priceTag">${money(p.price)}</div>
+            <div class="stock">🔥 Tendance ${p.hype}/100 • Plus que ${left} en stock</div>
+          </div>
+          <div class="row">
+            <div class="stock">${ship}</div>
+            <button class="add" onclick="addToCart('${p.id}')">Ajouter 🧺</button>
+          </div>
+        </div>
+      `;
+    }).join("") || `<div style="color:rgba(255,255,255,.75);font-weight:900">
+      Aucun produit trouvé. Même le luxe te refuse. 😭
+    </div>`;
+  }
+
+  // ======= Prime / Gate / Panic =======
+  function openPrime(){ primeModal.classList.add("on"); }
+  function closePrime(){ primeModal.classList.remove("on"); }
+  function confirmPrime(){
+    closePrime();
+    state.prime = true;
+    saveState();
+    toast("Prime", "ULTRA PRIME activé (FAKE) ✅. Tu es riche en imagination.");
+    render();
+  }
+
+  function showPrimeGate(){
+    const days = trialDays();
+    if(days > 0){
+      toast("Prime Gate", "Accès (démo) accordé. Mais je te juge quand même 😈");
+      return;
+    }
+    toast("Prime Gate", "Essai fini. Passe en ULTRA PRIME LUXE (FAKE) 💳");
+    openPrime();
+  }
+
+  function fakeUpdate(){
+    showLoader();
+    setTimeout(()=>{
+      hideLoader();
+      toast("Update", "Mise à jour Or installée : +flemme, +snobisme, -utilité 😴");
+    }, 900);
+  }
+
+  function panic(){
+    toast("Panique", "🚨 Sirènes mentales : WEEWOO. Je nie tout 😎");
+    document.title = "Document Administratif Très Normal";
+    setTimeout(()=>{ document.title = "AMAZØN LUXE™ — Démo Parodie"; }, 2500);
+  }
+
+  // ======= Checkout (FAKE) =======
+  function openCheckout(){
+    if(cartItems().length===0){
+      toast("Checkout", "Ton panier est vide, champion 🧺");
+      return;
+    }
+    checkoutInfo.style.display = "none";
+    checkoutModal.classList.add("on");
+  }
+  function closeCheckout(){ checkoutModal.classList.remove("on"); }
+
+  function confirmCheckout(){
+    showLoader();
+    setTimeout(()=>{
+      hideLoader();
+      const orderId = "LUXE-" + Math.random().toString(16).slice(2,8).toUpperCase();
+      const total = money(cartTotal());
+      checkoutInfo.style.display = "block";
+      checkoutInfo.innerHTML = `✅ Paiement (FAKE) accepté.<br>
+        Numéro de commande : <b>${orderId}</b><br>
+        Total : <b>${total}</b><br>
+        Livraison : <b>imaginaire</b> (mais rapide dans ton cœur).`;
+      // clear cart after "payment"
+      state.cart = {};
+      saveState();
+      updateCartUI();
+      toggleCart(false);
+      // auto download receipt suggestion
+      toast("Commande", "Commande validée (FAKE). Télécharge ton reçu 😈");
+    }, 900);
+  }
+
+  function downloadReceipt(){
+    const content =
+`REÇU AMAZØN LUXE™ (PARODIE)
+--------------------------
+Aucun paiement réel. Aucun produit réel.
+Juste une démo.
+
+Merci d’avoir simulé une commande.
+Signature : 🛒💎 (fatigué)
+`;
+    const blob = new Blob([content], {type:"text/plain"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "recu_amazon_luxe_parodie.txt";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("Reçu", "Reçu (FAKE) téléchargé. Ça brille 😎");
+  }
+
+  function resetAll(){
+    if(!confirm("Reset panier + historique local ? (parodie)")) return;
+    localStorage.removeItem(STORE_KEY);
+    state = { cart:{}, mode:"rude", lux:5, prime:false };
+    saveState();
+    document.getElementById("q").value = "";
+    document.getElementById("cat").value = "all";
+    document.getElementById("sort").value = "hot";
+    document.getElementById("lux").value = 5;
+    document.getElementById("luxLevel").textContent = 5;
+    setMode("rude");
+    updateCartUI();
+    render();
+    toast("Reset", "Tout reset. Comme un PNJ après reboot 🧍‍♂️");
+  }
+
+  // ======= Toast (mini notif) =======
+  let toastTimer = null;
+  function toast(title, msg){
+    const id = "toastBox";
+    let el = document.getElementById(id);
+    if(!el){
+      el = document.createElement("div");
+      el.id = id;
+      el.style.position = "fixed";
+      el.style.left = "12px";
+      el.style.bottom = "12px";
+      el.style.zIndex = "2000";
+      el.style.width = "min(360px, 92vw)";
+      document.body.appendChild(el);
+    }
+    el.innerHTML = `
+      <div style="
+        border:1px solid rgba(255,215,0,.22);
+        background: rgba(10,10,10,.92);
+        border-radius:14px;
+        padding:12px;
+        box-shadow:0 20px 60px rgba(0,0,0,.6);
+      ">
+        <div style="font-weight:1000;color:rgba(255,255,255,.92)">${title}</div>
+        <div style="font-size:12px;color:${getMuted()};margin-top:4px;line-height:1.25">${msg}</div>
+      </div>
+    `;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{ el.remove(); }, 2600);
+  }
+
+  // ======= Storage =======
+  function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
+  }
+
+  function setMode(m){
+    document.getElementById("modeRude").classList.toggle("active", m==="rude");
+    document.getElementById("modePNJ").classList.toggle("active", m==="pnj");
+    document.getElementById("modeSoft").classList.toggle("active", m==="soft");
+  }
+
+  // ======= Init =======
+  initTrial();
+  // apply state
+  document.getElementById("lux").value = state.lux || 5;
+  document.getElementById("luxLevel").textContent = state.lux || 5;
+  setMode(state.mode || "rude");
+  render();
+  updateCartUI();
+</script>
+</body>
+</html>
