@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AMAZØN LUXE™ — Démo Parodie</title>
+  <title>AMAZON LUXE™ — MLa version Luxe de Amazon</title>
   <style>
     :root{
       --bg1:#2b2100; --bg2:#000;
@@ -391,7 +391,7 @@
 
 <body>
 <header>
-  <div class="brand">🛒 AMAZØN LUXE™ <span class="badge">PARODIE / DÉMO</span></div>
+  <div class="brand">🛒 AMAZON LUXE™ <span class="badge">Luxe du Luxe</span></div>
   <div class="right">
     <div class="pill">Prime Luxe : 79,99€ / mois</div>
     <div class="tiny">Essai gratuit (démo) : <b id="trialLeft">3</b> jours</div>
@@ -404,15 +404,15 @@
   <aside class="sidebar">
     <div class="side-top">
       <div class="disclaimer">
-        ⚠️ Ceci est une <u>parodie</u> / démo. <br>
-        Aucun paiement réel. Aucun produit réel. <br>
-        Juste du commerce imaginaire doré.
+        ⚠️ Ceci est <u>réel</u> <br>
+        Paiement réel. Produit réel. <br>
+        Juste du commerce doré.
       </div>
 
       <div class="chips">
-        <div class="chip active" id="modeRude" onclick="toggleMode('rude')">Mode Insolent 😈</div>
-        <div class="chip" id="modePNJ" onclick="toggleMode('pnj')">Mode PNJ 🧍‍♂️</div>
-        <div class="chip" id="modeSoft" onclick="toggleMode('soft')">Mode Faux-Poli 🤝</div>
+        <div class="chip active" id="modeRude" onclick="toggleMode('rude')">Vente Basicement cool</div>
+        <div class="chip" id="modePNJ" onclick="toggleMode('pnj')">Vente Basic</div>
+        <div class="chip" id="modeSoft" onclick="toggleMode('soft')">Vente gentille</div>
       </div>
 
       <div class="box">
@@ -428,14 +428,14 @@
       <button class="btn gold" onclick="openPrime()">💳 Passer en ULTRA PRIME LUXE 149,99€</button>
       <button class="btn" onclick="showPrimeGate()">🔒 Débloquer Livraison “En or”</button>
       <button class="btn" onclick="fakeUpdate()">🪙 Télécharger la Mise à Jour Or</button>
-      <button class="btn" onclick="downloadReceipt()">🧾 Télécharger un reçu (FAKE)</button>
+      <button class="btn" onclick="downloadReceipt()">🧾 Télécharger un reçu </button>
       <button class="btn" onclick="resetAll()">🧼 Reset (panier + historique)</button>
       <button class="btn danger" onclick="panic()">🚨 Mode Panique</button>
     </div>
 
     <div class="note">
       💾 Tout est stocké <b>localement</b> (navigateur).<br>
-      🧠 Pas de serveur, pas de paiement, pas de collecte. (C’est une démo parodie.)
+      🧠 Serveur, Paiement, collecte de données. (C’est réel.)
     </div>
   </aside>
 
@@ -466,7 +466,7 @@
 <!-- Cart Drawer -->
 <div class="drawer" id="drawer">
   <div class="drawerHead">
-    <div><b>Panier Luxe</b> <span style="opacity:.8;font-size:12px">(parodie)</span></div>
+    <div><b>Panier Luxe</b> <span style="opacity:.8;font-size:12px">(réel)</span></div>
     <button class="closeBtn" onclick="toggleCart(false)">Fermer</button>
   </div>
   <div class="drawerBody" id="cartBody"></div>
@@ -475,8 +475,8 @@
       <span>Total</span>
       <span id="total">0,00€</span>
     </div>
-    <button class="checkout" onclick="openCheckout()">Passer au paiement (FAKE)</button>
-    <div class="tiny" style="padding:0">⚠️ Paiement factice. Juste pour rire.</div>
+    <button class="checkout" onclick="openCheckout()">Passer au paiement </button>
+    <div class="tiny" style="padding:0"> Paiement réel.</div>
   </div>
 </div>
 
@@ -492,26 +492,26 @@
 <!-- Prime Modal -->
 <div class="modal" id="primeModal">
   <div class="loaderCard">
-    <h3>💎 ULTRA PRIME LUXE — 149,99€</h3>
+    <h3>💎 ULTRA PRIME LUXE — 549,99€</h3>
     <div class="sub">Plus cher = plus inutile. C’est la tradition.</div>
 
     <div class="field">
-      <label>Nom (pour faire sérieux)</label>
+      <label>Nom </label>
       <input placeholder="Comte de la CB" />
     </div>
     <div class="field">
-      <label>Carte (FAKE)</label>
+      <label>Carte </label>
       <input placeholder="0000 0000 0000 0000" />
     </div>
 
     <div class="warn">
-      ✅ Aucun paiement réel. Aucun enregistrement. <br>
-      C’est une parodie / démo.
+      ✅ Paiement réel. Enregistrement. <br>
+      C’est Riche !
     </div>
 
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap">
       <button class="closeBtn" onclick="closePrime()">Fermer</button>
-      <button class="ok" onclick="confirmPrime()">Payer (FAKE)</button>
+      <button class="ok" onclick="confirmPrime()">Payer </button>
     </div>
   </div>
 </div>
@@ -519,11 +519,11 @@
 <!-- Checkout Modal -->
 <div class="modal" id="checkoutModal">
   <div class="loaderCard">
-    <h3>🧾 Checkout Luxe (FAKE)</h3>
+    <h3>🧾 Checkout Luxe </h3>
     <div class="sub">On va faire semblant, mais avec du style.</div>
 
     <div class="field">
-      <label>Adresse (imaginaire)</label>
+      <label>Adresse </label>
       <input placeholder="Château Premium, Avenue de l'Or, 75000 Blingville" />
     </div>
     <div class="field">
@@ -534,13 +534,12 @@
     <div class="success" id="checkoutInfo" style="display:none"></div>
 
     <div class="warn">
-      ✅ Aucun paiement réel. Aucun produit réel. <br>
-      C’est une démo parodie.
+      ✅ Paiement réel. produit réel. <br>
     </div>
 
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap">
       <button class="closeBtn" onclick="closeCheckout()">Annuler</button>
-      <button class="ok" onclick="confirmCheckout()">Payer (FAKE)</button>
+      <button class="ok" onclick="confirmCheckout()">Payer </button>
     </div>
   </div>
 </div>
@@ -705,7 +704,7 @@
 
     if(items.length===0){
       cartBody.innerHTML = `<div style="color:rgba(255,255,255,.7);font-weight:900">
-        Ton panier est vide. Comme le service client. 😭
+        Ton panier est vide.
       </div>`;
       totalEl.textContent = money(0);
       return;
@@ -757,7 +756,7 @@
 
     grid.innerHTML = list.map(p=>{
       const left = Math.max(1, Math.floor((100 - p.hype)/6)) + (state.lux>=7 ? 0 : 1); // fake scarcity
-      const ship = state.prime ? "Livraison: Téléportation (FAKE)" : "Livraison: Or lent (démo)";
+      const ship = state.prime ? "Livraison: Téléportation " : "Livraison: Or lent (démo)";
       return `
         <div class="card">
           <div class="img">${p.icon}</div>
@@ -774,7 +773,7 @@
         </div>
       `;
     }).join("") || `<div style="color:rgba(255,255,255,.75);font-weight:900">
-      Aucun produit trouvé. Même le luxe te refuse. 😭
+      Aucun produit trouvé. 😭
     </div>`;
   }
 
@@ -785,17 +784,17 @@
     closePrime();
     state.prime = true;
     saveState();
-    toast("Prime", "ULTRA PRIME activé (FAKE) ✅. Tu es riche en imagination.");
+    toast("Prime", "ULTRA PRIME activé  ✅. Tu es riche.");
     render();
   }
 
   function showPrimeGate(){
     const days = trialDays();
     if(days > 0){
-      toast("Prime Gate", "Accès (démo) accordé. Mais je te juge quand même 😈");
+      toast("Prime Gate", "Accès accordé.");
       return;
     }
-    toast("Prime Gate", "Essai fini. Passe en ULTRA PRIME LUXE (FAKE) 💳");
+    toast("Prime Gate", "Essai fini. Passe en ULTRA PRIME LUXE 💳");
     openPrime();
   }
 
@@ -810,13 +809,13 @@
   function panic(){
     toast("Panique", "🚨 Sirènes mentales : WEEWOO. Je nie tout 😎");
     document.title = "Document Administratif Très Normal";
-    setTimeout(()=>{ document.title = "AMAZØN LUXE™ — Démo Parodie"; }, 2500);
+    setTimeout(()=>{ document.title = "AMAZON LUXE™ "; }, 2500);
   }
 
   // ======= Checkout (FAKE) =======
   function openCheckout(){
     if(cartItems().length===0){
-      toast("Checkout", "Ton panier est vide, champion 🧺");
+      toast("Checkout", "Ton panier est vide 🧺");
       return;
     }
     checkoutInfo.style.display = "none";
@@ -831,28 +830,28 @@
       const orderId = "LUXE-" + Math.random().toString(16).slice(2,8).toUpperCase();
       const total = money(cartTotal());
       checkoutInfo.style.display = "block";
-      checkoutInfo.innerHTML = `✅ Paiement (FAKE) accepté.<br>
+      checkoutInfo.innerHTML = `✅ Paiement accepté.<br>
         Numéro de commande : <b>${orderId}</b><br>
         Total : <b>${total}</b><br>
-        Livraison : <b>imaginaire</b> (mais rapide dans ton cœur).`;
+        Livraison : <b>Rapide</b> (environ 3 jours ouvrés).`;
       // clear cart after "payment"
       state.cart = {};
       saveState();
       updateCartUI();
       toggleCart(false);
       // auto download receipt suggestion
-      toast("Commande", "Commande validée (FAKE). Télécharge ton reçu 😈");
+      toast("Commande", "Commande validée . Télécharge ton reçu ");
     }, 900);
   }
 
   function downloadReceipt(){
     const content =
-`REÇU AMAZØN LUXE™ (PARODIE)
+`REÇU AMAZON LUXE™ (PARODIE)
 --------------------------
-Aucun paiement réel. Aucun produit réel.
-Juste une démo.
+Paiement réel. Produit réel.
+Vous avez bien été debite.
 
-Merci d’avoir simulé une commande.
+Merci d’avoir fait une commande.
 Signature : 🛒💎 (fatigué)
 `;
     const blob = new Blob([content], {type:"text/plain"});
@@ -861,7 +860,7 @@ Signature : 🛒💎 (fatigué)
     a.download = "recu_amazon_luxe_parodie.txt";
     a.click();
     URL.revokeObjectURL(a.href);
-    toast("Reçu", "Reçu (FAKE) téléchargé. Ça brille 😎");
+    toast("Reçu", "Reçu téléchargé. Ça brille 😎");
   }
 
   function resetAll(){
@@ -877,7 +876,7 @@ Signature : 🛒💎 (fatigué)
     setMode("rude");
     updateCartUI();
     render();
-    toast("Reset", "Tout reset. Comme un PNJ après reboot 🧍‍♂️");
+    toast("Reset", "Tout reset");
   }
 
   // ======= Toast (mini notif) =======
