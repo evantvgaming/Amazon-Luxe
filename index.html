@@ -394,7 +394,7 @@
   <div class="brand">🛒 AMAZON LUXE™ <span class="badge">Luxe du Luxe</span></div>
   <div class="right">
     <div class="pill">Prime Luxe : 79,99€ / mois</div>
-    <div class="tiny">Essai gratuit (démo) : <b id="trialLeft">3</b> jours</div>
+    <div class="tiny">Essai gratuit : <b id="trialLeft">3</b> jours</div>
     <div class="pill">Or Absolu ✨</div>
     <button class="pill" style="cursor:pointer" onclick="toggleCart()">Panier 🧺 <b id="cartCount">0</b></button>
   </div>
@@ -404,8 +404,8 @@
   <aside class="sidebar">
     <div class="side-top">
       <div class="disclaimer">
-        ⚠️ Ceci est <u>réel</u> <br>
-        Paiement réel. Produit réel. <br>
+        ✅ Site de présentation <br>
+        Interface e-commerce (UI) <br>
         Juste du commerce doré.
       </div>
 
@@ -435,7 +435,7 @@
 
     <div class="note">
       💾 Tout est stocké <b>localement</b> (navigateur).<br>
-      🧠 Serveur, Paiement, collecte de données. (C’est réel.)
+      🧠 Serveur, paiement et données : à brancher côté backend.
     </div>
   </aside>
 
@@ -476,7 +476,7 @@
       <span id="total">0,00€</span>
     </div>
     <button class="checkout" onclick="openCheckout()">Passer au paiement </button>
-    <div class="tiny" style="padding:0"> Paiement réel.</div>
+    <div class="tiny" style="padding:0">Paiement géré côté serveur.</div>
   </div>
 </div>
 
@@ -505,7 +505,7 @@
     </div>
 
     <div class="warn">
-      ✅ Paiement réel. Enregistrement. <br>
+      ✅ Paiement et enregistrement via backend. <br>
       C’est Riche !
     </div>
 
@@ -534,7 +534,7 @@
     <div class="success" id="checkoutInfo" style="display:none"></div>
 
     <div class="warn">
-      ✅ Paiement réel. produit réel. <br>
+      ✅ Paiement via backend. <br>
     </div>
 
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap">
@@ -625,14 +625,23 @@
     return n.toFixed(2).replace(".", ",") + "€";
   }
 
-  function setMode(m){
-    state.mode = m;
+  // ======= Mode (unique) =======
+  function applyModeUI(m){
     document.getElementById("modeRude").classList.toggle("active", m==="rude");
     document.getElementById("modePNJ").classList.toggle("active", m==="pnj");
     document.getElementById("modeSoft").classList.toggle("active", m==="soft");
+  }
+
+  function setMode(m){
+    state.mode = m;
+    applyModeUI(m);
     saveState();
   }
-  function toggleMode(m){ setMode(m); toast("Mode", "Mode changé : " + m.toUpperCase()); }
+
+  function toggleMode(m){
+    setMode(m);
+    toast("Mode", "Mode changé : " + m.toUpperCase());
+  }
 
   function setLux(v){
     state.lux = parseInt(v,10);
@@ -756,7 +765,7 @@
 
     grid.innerHTML = list.map(p=>{
       const left = Math.max(1, Math.floor((100 - p.hype)/6)) + (state.lux>=7 ? 0 : 1); // fake scarcity
-      const ship = state.prime ? "Livraison: Téléportation " : "Livraison: Or lent (démo)";
+      const ship = state.prime ? "Livraison: Téléportation " : "Livraison: Or lent (UI)";
       return `
         <div class="card">
           <div class="img">${p.icon}</div>
@@ -784,7 +793,7 @@
     closePrime();
     state.prime = true;
     saveState();
-    toast("Prime", "ULTRA PRIME activé  ✅. Tu es riche.");
+    toast("Prime", "ULTRA PRIME activé ✅. Tu es riche.");
     render();
   }
 
@@ -812,7 +821,7 @@
     setTimeout(()=>{ document.title = "AMAZON LUXE™ "; }, 2500);
   }
 
-  // ======= Checkout (FAKE) =======
+  // ======= Checkout =======
   function openCheckout(){
     if(cartItems().length===0){
       toast("Checkout", "Ton panier est vide 🧺");
@@ -830,41 +839,39 @@
       const orderId = "LUXE-" + Math.random().toString(16).slice(2,8).toUpperCase();
       const total = money(cartTotal());
       checkoutInfo.style.display = "block";
-      checkoutInfo.innerHTML = `✅ Paiement accepté.<br>
+      checkoutInfo.innerHTML = `✅ Commande enregistrée.<br>
         Numéro de commande : <b>${orderId}</b><br>
         Total : <b>${total}</b><br>
         Livraison : <b>Rapide</b> (environ 3 jours ouvrés).`;
-      // clear cart after "payment"
       state.cart = {};
       saveState();
       updateCartUI();
       toggleCart(false);
-      // auto download receipt suggestion
-      toast("Commande", "Commande validée . Télécharge ton reçu ");
+      toast("Commande", "Commande validée. Télécharge ton reçu 🧾");
     }, 900);
   }
 
   function downloadReceipt(){
     const content =
-`REÇU AMAZON LUXE™ (PARODIE)
+`REÇU AMAZON LUXE™
 --------------------------
-Paiement réel. Produit réel.
-Vous avez bien été debite.
+Reçu généré par l’interface.
+Paiement à confirmer côté serveur.
 
 Merci d’avoir fait une commande.
-Signature : 🛒💎 (fatigué)
+Signature : 🛒💎
 `;
     const blob = new Blob([content], {type:"text/plain"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "recu_amazon_luxe_parodie.txt";
+    a.download = "recu_amazon_luxe.txt";
     a.click();
     URL.revokeObjectURL(a.href);
     toast("Reçu", "Reçu téléchargé. Ça brille 😎");
   }
 
   function resetAll(){
-    if(!confirm("Reset panier + historique local ? (parodie)")) return;
+    if(!confirm("Reset panier + historique local ?")) return;
     localStorage.removeItem(STORE_KEY);
     state = { cart:{}, mode:"rude", lux:5, prime:false };
     saveState();
@@ -919,20 +926,14 @@ Signature : 🛒💎 (fatigué)
     }catch(e){ return null; }
   }
 
-  function setMode(m){
-    document.getElementById("modeRude").classList.toggle("active", m==="rude");
-    document.getElementById("modePNJ").classList.toggle("active", m==="pnj");
-    document.getElementById("modeSoft").classList.toggle("active", m==="soft");
-  }
-
   // ======= Init =======
   initTrial();
-  // apply state
   document.getElementById("lux").value = state.lux || 5;
   document.getElementById("luxLevel").textContent = state.lux || 5;
-  setMode(state.mode || "rude");
+  applyModeUI(state.mode || "rude");
   render();
   updateCartUI();
 </script>
 </body>
 </html>
+
