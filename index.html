@@ -200,6 +200,13 @@
       ✨ Le panier s’ouvre à droite.<br>
       🎟️ Codes promo actifs : discrets comme un voleur en claquettes.
     </div>
+
+    <div style="padding:0 12px 12px 12px;overflow:auto">
+      <div class="box" style="margin-top:0">
+        <b>Historique des paiements</b>
+        <div id="historyList" class="tiny" style="margin-top:8px;white-space:normal;line-height:1.4"></div>
+      </div>
+    </div>
   </aside>
 
   <main class="main">
@@ -298,38 +305,58 @@
 </div>
 
 <script>
-  const STORE_KEY = "amazon_luxe_demo_store_v2";
-  const TRIAL_KEY = "luxe_trial_days_left_demo_v2";
-  const LAST_KEY = "luxe_trial_last_seen_demo_v2";
+  const STORE_KEY = "amazon_luxe_demo_store_v3";
+  const TRIAL_KEY = "luxe_trial_days_left_demo_v3";
+  const LAST_KEY = "luxe_trial_last_seen_demo_v3";
+  const HISTORY_KEY = "amazon_luxe_history_v1";
+
+  function makePhoto(label, bg1, bg2, emoji){
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop stop-color="${bg1}" offset="0"/>
+            <stop stop-color="${bg2}" offset="1"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="520" fill="url(#g)"/>
+        <circle cx="680" cy="110" r="70" fill="rgba(255,255,255,.10)"/>
+        <circle cx="120" cy="420" r="90" fill="rgba(255,255,255,.08)"/>
+        <text x="50%" y="42%" text-anchor="middle" font-size="130">${emoji}</text>
+        <text x="50%" y="72%" text-anchor="middle" font-size="40" fill="white" font-family="Arial, sans-serif" font-weight="700">${label}</text>
+      </svg>`;
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+  }
 
   const products = [
-    {id:"p1", icon:"💎", name:"Air de Luxe en Bocal", cat:"bling", price:79.99, hype:98, image:"https://source.unsplash.com/featured/600x400/?luxury,glass,jar", desc:"Un bocal chic pour décorer une étagère avec suffisamment d’arrogance."},
-    {id:"p2", icon:"🧈", name:"Beurre de Collection", cat:"food", price:49.99, hype:92, image:"https://source.unsplash.com/featured/600x400/?butter,gourmet", desc:"Une belle présentation, un prix agressif, une tartine intimidée."},
-    {id:"p3", icon:"🧎", name:"Abonnement à la Flemme Pro", cat:"flemme", price:99.99, hype:90, image:"https://source.unsplash.com/featured/600x400/?luxury,bedroom", desc:"Le mood officiel des gens qui répondent demain et respirent aujourd’hui."},
-    {id:"p4", icon:"🧸", name:"Peluche Ours Velours Premium", cat:"plush", price:59.99, hype:91, image:"https://source.unsplash.com/featured/600x400/?teddy,bear", desc:"Une peluche douce, chic, et émotionnellement plus stable que la moitié d’internet."},
-    {id:"p5", icon:"🪙", name:"Pièce Dorée Décorative", cat:"bling", price:19.99, hype:80, image:"https://source.unsplash.com/featured/600x400/?gold,coin", desc:"Objet décoratif élégant pour bureau qui veut flex sans parler."},
-    {id:"p6", icon:"🫖", name:"Thé Signature Prestige", cat:"food", price:39.99, hype:87, image:"https://source.unsplash.com/featured/600x400/?tea,luxury", desc:"Pour boire quelque chose avec un regard supérieur et une tasse trop chère."},
-    {id:"p7", icon:"🧼", name:"Savon Doré", cat:"bling", price:59.99, hype:84, image:"https://source.unsplash.com/featured/600x400/?soap,luxury", desc:"Du savon élégant. Oui, même la mousse peut avoir du standing."},
-    {id:"p8", icon:"🛌", name:"Oreiller Cloud Premium", cat:"flemme", price:69.99, hype:89, image:"https://source.unsplash.com/featured/600x400/?pillow,bed", desc:"Pour dormir avec la sensation d’avoir un agenda vide et zéro remords."},
-    {id:"p9", icon:"📦", name:"Boîte Cadeau Rigide Luxe", cat:"pnj", price:24.99, hype:83, image:"https://source.unsplash.com/featured/600x400/?gift,box,luxury", desc:"Belle boîte pour offrir quelque chose ou juste offrir la boîte, soyons audacieux."},
-    {id:"p10", icon:"🍟", name:"Frites Truffe Edition Fine", cat:"food", price:14.99, hype:79, image:"https://source.unsplash.com/featured/600x400/?french,fries,gourmet", desc:"Des frites qui ont fait de grandes études."},
-    {id:"p11", icon:"🕯️", name:"Bougie Ambre Royale", cat:"bling", price:34.99, hype:82, image:"https://source.unsplash.com/featured/600x400/?luxury,candle", desc:"Pour que la pièce sente la richesse tranquille et les décisions douteuses."},
-    {id:"p12", icon:"🎧", name:"Casque Confort Studio", cat:"tech", price:89.99, hype:93, image:"https://source.unsplash.com/featured/600x400/?headphones,premium", desc:"Du bon son, une belle finition, et zéro voisin sympathique."},
-    {id:"p13", icon:"🐻", name:"Peluche Panda Premium", cat:"plush", price:44.99, hype:86, image:"https://source.unsplash.com/featured/600x400/?panda,plush", desc:"Douce, mignonne, et bien moins problématique qu’un coloc."},
-    {id:"p14", icon:"☕", name:"Mug Porcelaine Or", cat:"bling", price:29.99, hype:81, image:"https://source.unsplash.com/featured/600x400/?luxury,mug", desc:"Un mug trop chic pour un café soluble, mais on ne juge pas. Enfin si un peu."},
-    {id:"p15", icon:"🧁", name:"Coffret Cupcakes Signature", cat:"food", price:64.99, hype:85, image:"https://source.unsplash.com/featured/600x400/?cupcakes,luxury", desc:"Un coffret dessert qui donne envie de faire une story avant même d’ouvrir la boîte."},
-    {id:"p16", icon:"🧸", name:"Peluche Lapin Velours", cat:"plush", price:39.99, hype:84, image:"https://source.unsplash.com/featured/600x400/?rabbit,plush", desc:"Le genre de peluche qui a l’air d’avoir un loyer trop élevé."},
-    {id:"p17", icon:"⌚", name:"Montre Minimaliste Premium", cat:"tech", price:99.99, hype:88, image:"https://source.unsplash.com/featured/600x400/?watch,luxury", desc:"Très belle montre pour regarder le temps passer avec arrogance."},
-    {id:"p18", icon:"🪑", name:"Chaise Lounge Dorée", cat:"pnj", price:94.99, hype:87, image:"https://source.unsplash.com/featured/600x400/?chair,luxury", desc:"Tu t’assois, tu deviens instantanément un opinion leader du salon."},
-    {id:"p19", icon:"🪞", name:"Miroir Cadre Prestige", cat:"bling", price:74.99, hype:83, image:"https://source.unsplash.com/featured/600x400/?mirror,gold", desc:"Un miroir pour admirer ton aura et tes choix financiers discutables."},
-    {id:"p20", icon:"🧸", name:"Peluche Chat Haute Douceur", cat:"plush", price:34.99, hype:90, image:"https://source.unsplash.com/featured/600x400/?cat,plush,toy", desc:"Un chat moelleux qui ne griffe pas, ne juge pas, et ne demande pas de croquettes."},
-    {id:"p21", icon:"🧃", name:"Jus Premium Pêche Blanche", cat:"food", price:12.99, hype:77, image:"https://source.unsplash.com/featured/600x400/?peach,juice", desc:"Une boisson fine pour les palais qui veulent du fruit avec une veste."},
-    {id:"p22", icon:"💡", name:"Lampe Champignon Design", cat:"pnj", price:54.99, hype:88, image:"https://source.unsplash.com/featured/600x400/?designer,lamp", desc:"Une lampe stylée qui éclaire mieux que certaines conversations de famille."},
-    {id:"p23", icon:"📓", name:"Carnet Cuir Signature", cat:"bling", price:27.99, hype:75, image:"https://source.unsplash.com/featured/600x400/?leather,notebook", desc:"Parfait pour noter des idées premium et des rêves hors budget."},
-    {id:"p24", icon:"🖱️", name:"Souris Sans Fil Luxe", cat:"tech", price:42.99, hype:82, image:"https://source.unsplash.com/featured/600x400/?wireless,mouse", desc:"Une souris confortable pour cliquer avec une noblesse fatigante."}
+    {id:"p1", icon:"💎", name:"Air de Luxe en Bocal", cat:"bling", price:79.99, hype:98, image:makePhoto("Air de Luxe", "#0f172a", "#ca8a04", "💎"), desc:"Un bocal chic pour décorer une étagère avec suffisamment d’arrogance."},
+    {id:"p2", icon:"🧈", name:"Beurre de Collection", cat:"food", price:49.99, hype:92, image:makePhoto("Beurre Premium", "#7c2d12", "#f59e0b", "🧈"), desc:"Une belle présentation, un prix agressif, une tartine intimidée."},
+    {id:"p3", icon:"🧎", name:"Abonnement à la Flemme Pro", cat:"flemme", price:99.99, hype:90, image:makePhoto("Flemme Pro", "#1f2937", "#6b7280", "🛌"), desc:"Le mood officiel des gens qui répondent demain et respirent aujourd’hui."},
+    {id:"p4", icon:"🧸", name:"Peluche Ours Velours Premium", cat:"plush", price:59.99, hype:91, image:makePhoto("Ours Velours", "#7c3aed", "#ec4899", "🧸"), desc:"Une peluche douce, chic, et émotionnellement plus stable que la moitié d’internet."},
+    {id:"p5", icon:"🪙", name:"Pièce Dorée Décorative", cat:"bling", price:19.99, hype:80, image:makePhoto("Pièce Dorée", "#3f3f46", "#eab308", "🪙"), desc:"Objet décoratif élégant pour bureau qui veut flex sans parler."},
+    {id:"p6", icon:"🫖", name:"Thé Signature Prestige", cat:"food", price:39.99, hype:87, image:makePhoto("Thé Prestige", "#14532d", "#84cc16", "🫖"), desc:"Pour boire quelque chose avec un regard supérieur et une tasse trop chère."},
+    {id:"p7", icon:"🧼", name:"Savon Doré", cat:"bling", price:59.99, hype:84, image:makePhoto("Savon Doré", "#0f766e", "#eab308", "🧼"), desc:"Du savon élégant. Oui, même la mousse peut avoir du standing."},
+    {id:"p8", icon:"🛌", name:"Oreiller Cloud Premium", cat:"flemme", price:69.99, hype:89, image:makePhoto("Oreiller Cloud", "#1d4ed8", "#93c5fd", "🛌"), desc:"Pour dormir avec la sensation d’avoir un agenda vide et zéro remords."},
+    {id:"p9", icon:"📦", name:"Boîte Cadeau Rigide Luxe", cat:"pnj", price:24.99, hype:83, image:makePhoto("Boîte Cadeau", "#7c2d12", "#facc15", "📦"), desc:"Belle boîte pour offrir quelque chose ou juste offrir la boîte, soyons audacieux."},
+    {id:"p10", icon:"🍟", name:"Frites Truffe Edition Fine", cat:"food", price:14.99, hype:79, image:makePhoto("Frites Truffe", "#78350f", "#f59e0b", "🍟"), desc:"Des frites qui ont fait de grandes études."},
+    {id:"p11", icon:"🕯️", name:"Bougie Ambre Royale", cat:"bling", price:34.99, hype:82, image:makePhoto("Bougie Royale", "#581c87", "#fb7185", "🕯️"), desc:"Pour que la pièce sente la richesse tranquille et les décisions douteuses."},
+    {id:"p12", icon:"🎧", name:"Casque Confort Studio", cat:"tech", price:89.99, hype:93, image:makePhoto("Casque Studio", "#111827", "#6366f1", "🎧"), desc:"Du bon son, une belle finition, et zéro voisin sympathique."},
+    {id:"p13", icon:"🐻", name:"Peluche Panda Premium", cat:"plush", price:44.99, hype:86, image:makePhoto("Panda Premium", "#374151", "#10b981", "🐼"), desc:"Douce, mignonne, et bien moins problématique qu’un coloc."},
+    {id:"p14", icon:"☕", name:"Mug Porcelaine Or", cat:"bling", price:29.99, hype:81, image:makePhoto("Mug Porcelaine", "#334155", "#fbbf24", "☕"), desc:"Un mug trop chic pour un café soluble, mais on ne juge pas. Enfin si un peu."},
+    {id:"p15", icon:"🧁", name:"Coffret Cupcakes Signature", cat:"food", price:64.99, hype:85, image:makePhoto("Cupcakes", "#be185d", "#f9a8d4", "🧁"), desc:"Un coffret dessert qui donne envie de faire une story avant même d’ouvrir la boîte."},
+    {id:"p16", icon:"🐰", name:"Peluche Lapin Velours", cat:"plush", price:39.99, hype:84, image:makePhoto("Lapin Velours", "#6d28d9", "#c4b5fd", "🐰"), desc:"Le genre de peluche qui a l’air d’avoir un loyer trop élevé."},
+    {id:"p17", icon:"⌚", name:"Montre Minimaliste Premium", cat:"tech", price:99.99, hype:88, image:makePhoto("Montre Premium", "#0f172a", "#94a3b8", "⌚"), desc:"Très belle montre pour regarder le temps passer avec arrogance."},
+    {id:"p18", icon:"🪑", name:"Chaise Lounge Dorée", cat:"pnj", price:94.99, hype:87, image:makePhoto("Chaise Lounge", "#854d0e", "#fde68a", "🪑"), desc:"Tu t’assois, tu deviens instantanément un opinion leader du salon."},
+    {id:"p19", icon:"🪞", name:"Miroir Cadre Prestige", cat:"bling", price:74.99, hype:83, image:makePhoto("Miroir Prestige", "#475569", "#facc15", "🪞"), desc:"Un miroir pour admirer ton aura et tes choix financiers discutables."},
+    {id:"p20", icon:"🐱", name:"Peluche Chat Haute Douceur", cat:"plush", price:34.99, hype:90, image:makePhoto("Chat Douceur", "#1f2937", "#f472b6", "🐱"), desc:"Un chat moelleux qui ne griffe pas, ne juge pas, et ne demande pas de croquettes."},
+    {id:"p21", icon:"🧃", name:"Jus Premium Pêche Blanche", cat:"food", price:12.99, hype:77, image:makePhoto("Jus Pêche", "#9a3412", "#fdba74", "🧃"), desc:"Une boisson fine pour les palais qui veulent du fruit avec une veste."},
+    {id:"p22", icon:"💡", name:"Lampe Champignon Design", cat:"pnj", price:54.99, hype:88, image:makePhoto("Lampe Design", "#065f46", "#5eead4", "💡"), desc:"Une lampe stylée qui éclaire mieux que certaines conversations de famille."},
+    {id:"p23", icon:"📓", name:"Carnet Cuir Signature", cat:"bling", price:27.99, hype:75, image:makePhoto("Carnet Cuir", "#7c2d12", "#d6d3d1", "📓"), desc:"Parfait pour noter des idées premium et des rêves hors budget."},
+    {id:"p24", icon:"🖱️", name:"Souris Sans Fil Luxe", cat:"tech", price:42.99, hype:82, image:makePhoto("Souris Luxe", "#111827", "#22c55e", "🖱️"), desc:"Une souris confortable pour cliquer avec une noblesse fatigante."}
   ];
 
   let state = loadState() || { cart:{}, mode:"rude", lux:5, prime:false, promoCode:"", discountRate:0 };
+  let history = loadHistory();
 
   const grid = document.getElementById("grid");
   const drawer = document.getElementById("drawer");
@@ -348,6 +375,7 @@
   const checkoutInfo = document.getElementById("checkoutInfo");
   const promoInput = document.getElementById("promoCode");
   const promoMsg = document.getElementById("promoMsg");
+  const historyList = document.getElementById("historyList");
 
   const loaderLines = [
     "Polissage de l’or virtuel…",
@@ -369,6 +397,69 @@
   }
 
   function money(n){ return n.toFixed(2).replace('.', ',') + "€"; }
+  function todayLocal(){
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  }
+  function addDays(date, days){
+    const d = new Date(date);
+    d.setDate(d.getDate() + days);
+    return d;
+  }
+  function formatDateFR(date){
+    return new Intl.DateTimeFormat('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' }).format(date);
+  }
+  function daysBetween(start, end){
+    const ms = 24 * 60 * 60 * 1000;
+    return Math.max(0, Math.round((end - start) / ms));
+  }
+  function loadHistory(){
+    try{
+      const raw = localStorage.getItem(HISTORY_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveHistory(){ localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }
+  function getStatusLabel(order){
+    if(order.cancelled) return 'Annulé';
+    if(order.delivered) return 'Livré';
+    if(order.delayed) return 'Retardé';
+    if(order.shipped) return 'Expédié';
+    if(order.customs) return 'Douane';
+    return 'Paiement réussi';
+  }
+  function computeOrderFlags(order){
+    const today = todayLocal();
+    const customsDate = new Date(order.customsDate);
+    const shippedDate = new Date(order.shippedDate);
+    const estimatedDate = new Date(order.estimatedDate);
+    const deliveredDate = order.deliveredDate ? new Date(order.deliveredDate) : null;
+    order.customs = today >= customsDate;
+    order.shipped = today >= shippedDate;
+    order.delivered = deliveredDate ? today >= deliveredDate : today >= estimatedDate;
+    order.delayed = !!order.delayed && !order.delivered;
+    order.cancelled = !!order.cancelled;
+    order.daysLeft = order.delivered ? 0 : daysBetween(today, estimatedDate);
+    return order;
+  }
+  function renderHistory(){
+    if(!history.length){
+      historyList.innerHTML = 'Aucun paiement enregistré pour le moment.';
+      return;
+    }
+    history = history.map(computeOrderFlags);
+    saveHistory();
+    historyList.innerHTML = history.slice().reverse().map(order => {
+      const status = getStatusLabel(order);
+      const countdown = order.cancelled ? 'Livraison annulée.' : order.delivered ? `Livré le ${formatDateFR(new Date(order.deliveredDate || order.estimatedDate))}.` : `Livraison prévue le ${formatDateFR(new Date(order.estimatedDate))} (${order.daysLeft} jour${order.daysLeft > 1 ? 's' : ''} restant${order.daysLeft > 1 ? 's' : ''}).`;
+      return `<div style="padding:8px 0;border-bottom:1px solid rgba(255,215,0,.12)">
+        <div style="font-weight:1000;color:rgba(255,255,255,.92)">${order.id}</div>
+        <div>Statut : <b>${status}</b></div>
+        <div>Paiement : ${formatDateFR(new Date(order.orderDate))}</div>
+        <div>${countdown}</div>
+      </div>`;
+    }).join('');
+  }
   function getMuted(){ return "rgba(245,215,110,.75)"; }
   function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
   function loadState(){ try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; } catch(e){ return null; } }
@@ -552,12 +643,31 @@
     showLoader();
     setTimeout(() => {
       hideLoader();
+      const today = todayLocal();
+      const orderId = `LUXE-${Math.random().toString(16).slice(2, 8).toUpperCase()}`;
+      const estimatedDate = addDays(today, 15);
+      const customsDate = addDays(today, 2);
+      const shippedDate = addDays(today, 5);
       const total = money(totalValue());
+      const order = {
+        id: orderId,
+        orderDate: today.toISOString(),
+        customsDate: customsDate.toISOString(),
+        shippedDate: shippedDate.toISOString(),
+        estimatedDate: estimatedDate.toISOString(),
+        deliveredDate: estimatedDate.toISOString(),
+        delayed: false,
+        cancelled: false,
+        total: totalValue()
+      };
+      history.push(computeOrderFlags(order));
+      saveHistory();
+      renderHistory();
       checkoutInfo.style.display = "block";
-      checkoutInfo.innerHTML = `✅ Paiement réussi.<br>Total payé : <b>${total}</b><br>Livraison dans <b>15 jours</b>.`;
+      checkoutInfo.innerHTML = `✅ Paiement réussi.<br>Total payé : <b>${total}</b><br>Livraison prévue le <b>${formatDateFR(estimatedDate)}</b>.`;
       closeCheckout();
       deliveryMsg.style.display = "block";
-      deliveryMsg.textContent = "Paiement réussi. Livraison dans 15 jours.";
+      deliveryMsg.textContent = `Paiement réussi. Livraison le ${formatDateFR(estimatedDate)}.`;
       state.cart = {};
       state.promoCode = "";
       state.discountRate = 0;
@@ -566,7 +676,7 @@
       toggleCart(true);
       promoMsg.textContent = "";
       promoMsg.className = "promoMsg";
-      toast("Commande", "Paiement réussi. Livraison dans 15 jours.");
+      toast("Commande", `Paiement réussi. Livraison le ${formatDateFR(estimatedDate)}.`);
     }, 900);
   }
 
@@ -584,8 +694,11 @@
   function resetAll(){
     if(!confirm("Reset panier + historique local ?")) return;
     localStorage.removeItem(STORE_KEY);
+    localStorage.removeItem(HISTORY_KEY);
     state = { cart:{}, mode:"rude", lux:5, prime:false, promoCode:"", discountRate:0 };
+    history = [];
     saveState();
+    saveHistory();
     document.getElementById("q").value = "";
     document.getElementById("cat").value = "all";
     document.getElementById("sort").value = "hot";
@@ -597,6 +710,7 @@
     setMode("rude");
     updateCartUI();
     render();
+    renderHistory();
     toast("Reset", "Tout a été remis à zéro.");
   }
 
@@ -633,6 +747,8 @@
   }
   render();
   updateCartUI();
+  renderHistory();
 </script>
 </body>
 </html>
+
