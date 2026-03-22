@@ -190,8 +190,7 @@
       <button class="btn gold" onclick="openPrime()">💳 Passer en ULTRA PRIME LUXE 149,99€</button>
       <button class="btn" onclick="showPrimeGate()">🔒 Débloquer Livraison “En or”</button>
       <button class="btn" onclick="fakeUpdate()">🪙 Télécharger la Mise à Jour Or</button>
-      <button class="btn" onclick="downloadReceipt()">🧾 Télécharger un reçu</button>
-      <button class="btn" onclick="resetAll()">🧼 Reset</button>
+            <button class="btn" onclick="resetAll()">🧼 Reset (panier + historique)</button>
       <button class="btn danger" onclick="panic()">🚨 Mode Panique</button>
     </div>
 
@@ -245,7 +244,7 @@
       <input id="promoCode" class="promoInput" placeholder="Code promo" />
       <button class="promoBtn" onclick="applyPromo()">Appliquer</button>
     </div>
-    <div class="promoHint">Un code promo et c'est parfait</div>
+    <div class="promoHint">Un bon code, et paf, l’addition prend une balle dans le genou 😌</div>
     <div id="promoMsg" class="promoMsg"></div>
     <div class="totalLine"><span>Sous-total</span><span id="subTotal">0,00€</span></div>
     <div class="totalLine" id="discountLine" style="display:none"><span>Remise promo</span><span id="discountAmount">-0,00€</span></div>
@@ -451,12 +450,25 @@
     saveHistory();
     historyList.innerHTML = history.slice().reverse().map(order => {
       const status = getStatusLabel(order);
-      const countdown = order.cancelled ? 'Livraison annulée.' : order.delivered ? `Livré le ${formatDateFR(new Date(order.deliveredDate || order.estimatedDate))}.` : `Livraison prévue le ${formatDateFR(new Date(order.estimatedDate))} (${order.daysLeft} jour${order.daysLeft > 1 ? 's' : ''} restant${order.daysLeft > 1 ? 's' : ''}).`;
+            const countdown = order.cancelled ? 'Livraison annulée.' : order.delivered ? `Livré le ${formatDateFR(new Date(order.deliveredDate || order.estimatedDate))}.` : `Livraison prévue le ${formatDateFR(new Date(order.estimatedDate))} (${order.daysLeft} jour${order.daysLeft > 1 ? 's' : ''} restant${order.daysLeft > 1 ? 's' : ''}).`;
+      const itemsText = (order.items || []).map(item => `${item.name} — ${money(item.price)} x ${item.qty}`).join('<br>');
+      const promoText = order.promoCode ? `
+        <div>Code promo utilisé : <b>${order.promoCode}</b></div>` : '';
       return `<div style="padding:8px 0;border-bottom:1px solid rgba(255,215,0,.12)">
         <div style="font-weight:1000;color:rgba(255,255,255,.92)">${order.id}</div>
         <div>Statut : <b>${status}</b></div>
         <div>Paiement : ${formatDateFR(new Date(order.orderDate))}</div>
         <div>${countdown}</div>
+        <div style="margin-top:8px;padding:8px;border-radius:10px;background:rgba(255,255,255,.04);white-space:normal">
+          <div style="font-weight:1000">REÇU AMAZON LUXE</div>
+          <div>--------------------------</div>
+          <div style="margin-top:6px">${itemsText || 'Aucun article enregistré.'}</div>
+          ${promoText}
+          <div>--------------------------</div>
+          <div>Interface démo premium</div>
+          <div>Total : ${money(order.total)}</div>
+          <div>Merci pour votre commande.</div>
+        </div>
       </div>`;
     }).join('');
   }
@@ -658,7 +670,9 @@
         deliveredDate: estimatedDate.toISOString(),
         delayed: false,
         cancelled: false,
-        total: totalValue()
+        total: totalValue(),
+        promoCode: state.promoCode || "",
+        items: cartItems().map(({ p, qty }) => ({ name: p.name, price: p.price, qty }))
       };
       history.push(computeOrderFlags(order));
       saveHistory();
@@ -680,17 +694,7 @@
     }, 900);
   }
 
-  function downloadReceipt(){
-    const content = `REÇU AMAZON LUXE\n--------------------------\nInterface démo premium\nTotal affiché selon le panier courant\nMerci pour votre commande.`;
-    const blob = new Blob([content], { type:"text/plain" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "recu_amazon_luxe.txt";
-    a.click();
-    URL.revokeObjectURL(a.href);
-    toast("Reçu", "Reçu téléchargé.");
-  }
-
+  
   function resetAll(){
     if(!confirm("Reset panier + historique local ?")) return;
     localStorage.removeItem(STORE_KEY);
@@ -750,5 +754,7 @@
   renderHistory();
 </script>
 </body>
+</html>
+
 </html>
 
