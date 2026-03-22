@@ -190,7 +190,8 @@
       <button class="btn gold" onclick="openPrime()">💳 Passer en ULTRA PRIME LUXE 149,99€</button>
       <button class="btn" onclick="showPrimeGate()">🔒 Débloquer Livraison “En or”</button>
       <button class="btn" onclick="fakeUpdate()">🪙 Télécharger la Mise à Jour Or</button>
-            <button class="btn" onclick="resetAll()">🧼 Reset (panier + historique)</button>
+            <button class="btn" onclick="downloadLatestReceipt()">🧾 Télécharger le dernier reçu</button>
+      <button class="btn" onclick="resetAll()">🧼 Reset (panier + historique)</button>
       <button class="btn danger" onclick="panic()">🚨 Mode Panique</button>
     </div>
 
@@ -651,6 +652,37 @@
   }
   function closeCheckout(){ checkoutModal.classList.remove("on"); }
 
+  function buildReceiptText(order){
+    const lines = (order.items || []).map(item => `${item.name} — ${money(item.price)} x ${item.qty}`);
+    const promoLine = order.promoCode ? `Code promo utilisé : ${order.promoCode}` : "Aucun code promo utilisé";
+    return [
+      "REÇU AMAZON LUXE",
+      "--------------------------",
+      ...lines,
+      promoLine,
+      "--------------------------",
+      "Interface démo premium",
+      `Total : ${money(order.total)}`,
+      "Merci pour votre commande."
+    ].join("\n");
+  }
+
+  function downloadLatestReceipt(){
+    if(!history.length){
+      toast("Reçu", "Aucun reçu disponible pour le moment.");
+      return;
+    }
+    const latest = history[history.length - 1];
+    const content = buildReceiptText(latest);
+    const blob = new Blob([content], { type:"text/plain;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${latest.id.toLowerCase()}_recu_amazon_luxe.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("Reçu", "Le dernier reçu a été téléchargé.");
+  }
+
   function confirmCheckout(){
     showLoader();
     setTimeout(() => {
@@ -755,6 +787,3 @@
 </script>
 </body>
 </html>
-
-</html>
-
